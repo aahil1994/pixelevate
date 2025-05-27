@@ -1,3 +1,5 @@
+// script.js
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js')
@@ -6,13 +8,37 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-document.getElementById('toggle-dark').onclick = () => {
-  document.body.classList.toggle('dark');
-};
+document.addEventListener("DOMContentLoaded", () => {
+  const darkToggle = document.getElementById("toggle-dark");
+
+  // Dark mode toggle
+  darkToggle?.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
+    if (document.body.classList.contains("light-mode")) {
+      document.body.style.backgroundColor = "#f0f0f0";
+      document.body.style.color = "#111";
+    } else {
+      document.body.style.backgroundColor = "#121212";
+      document.body.style.color = "#fff";
+    }
+  });
+
+  // GSAP animations
+  gsap.from(".hero h2", { duration: 1, y: -50, opacity: 0, ease: "power3.out" });
+  gsap.from(".hero p", { duration: 1.2, delay: 0.3, y: -30, opacity: 0, ease: "power3.out" });
+  gsap.from(".tool-card", {
+    scrollTrigger: ".tool-card",
+    duration: 0.8,
+    y: 30,
+    opacity: 0,
+    stagger: 0.2,
+    ease: "power2.out"
+  });
+});
 
 let cropper;
 
-document.getElementById('cropInput').addEventListener('change', function () {
+document.getElementById('cropInput')?.addEventListener('change', function () {
   const file = this.files[0];
   if (file) {
     const img = document.getElementById('cropImage');
@@ -61,7 +87,6 @@ function unzipFile() {
   }
 }
 
-// MODNet ONNX Integration
 async function removeBg() {
   const file = document.getElementById('fileInput').files[0];
   if (!file) return alert("Please select an image");
