@@ -1,157 +1,160 @@
-/* Pixelevate Modern Styles */
+/* Reset and base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #f9f9f9;
-  color: #222;
-  transition: background 0.3s, color 0.3s;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0e1e36;
+  color: #fff;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Dark mode */
 body.dark {
-  background: #121212;
-  color: #eee;
+  background-color: #222;
+  color: #ddd;
 }
 
-.header {
+/* Header */
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  transition: background 0.3s;
+  background: #071024;
+  border-bottom: 1px solid #333;
 }
 
-body.dark .header {
-  background: #1e1e1e;
-  border-bottom-color: #333;
-}
-
-.logo {
-  font-size: 1.8rem;
-  font-weight: 800;
+header h1 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #fff;
 }
 
 #toggle-dark {
-  font-size: 1.2rem;
-  background: transparent;
-  border: none;
+  background: none;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+body.dark #toggle-dark {
+  background-color: #fff;
+  color: #222;
+  border-color: #fff;
+}
+
+/* Hero Section */
 .hero {
+  padding: 4rem 2rem;
   text-align: center;
-  padding: 3rem 1rem;
-  background: linear-gradient(135deg, #d8eaff, #fff);
-}
-
-body.dark .hero {
-  background: linear-gradient(135deg, #1e1e1e, #2e2e2e);
 }
 
 .hero h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #6ef3e1;
+  letter-spacing: 3px;
 }
 
 .hero p {
-  font-size: 1.1rem;
-  color: #555;
+  font-size: 1.3rem;
+  max-width: 700px;
+  margin: 0 auto;
+  color: #e4e4e4;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
-body.dark .hero p {
-  color: #ccc;
-}
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: auto;
+/* Tools Section */
+.tools {
+  padding: 3rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.8rem;
 }
 
 .tool-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  background: #071024;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.35);
+  min-width: 280px;
+  max-width: 360px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-body.dark .tool-card {
-  background: #1e1e1e;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.3s ease;
+  cursor: default;
 }
 
 .tool-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 30px #6ef3e1;
 }
 
-.icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.tool-card h3 {
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.6rem;
 }
 
-input[type="file"] {
-  display: block;
-  margin: 1rem auto;
-}
-
-button {
-  background-color: #007bff;
-  color: #fff;
+/* Buttons */
+.btn {
+  background: #6ef3e1;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  color: #071024;
+  font-weight: 700;
+  padding: 0.7rem 1.2rem;
+  border-radius: 15px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
 }
 
-button:hover {
-  background-color: #0056b3;
+.btn:hover {
+  background: #50d8c2;
 }
 
-canvas,
-img {
-  max-width: 100%;
-  margin-top: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-#downloadLink {
-  display: inline-block;
-  margin-top: 1rem;
-  background: #28a745;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+/* Inputs */
+input[type="file"] {
+  margin: 1rem 0 1.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: none;
+  background: #152a4a;
   color: #fff;
-  text-decoration: none;
 }
 
-#downloadLink:hover {
-  background: #1c7c32;
+/* Cropper container */
+#cropper-container {
+  margin-top: 1rem;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 15px;
 }
 
-.footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  background: #f1f1f1;
-  color: #444;
-}
-
-body.dark .footer {
-  background: #1a1a1a;
-  color: #aaa;
+/* Responsive */
+@media (max-width: 600px) {
+  .hero h2 {
+    font-size: 2rem;
+  }
+  .tools {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .tool-card {
+    max-width: 100%;
+  }
 }
