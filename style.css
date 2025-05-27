@@ -1,0 +1,103 @@
+/* Fonts and base */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #111;
+  color: #fff;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+body.dark {
+  background-color: #fff;
+  color: #111;
+}
+
+header.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #222;
+  color: #fff;
+}
+.logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+#toggle-dark {
+  font-size: 1.4rem;
+  background: #007bff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 2rem;
+  background: #181818;
+  border-bottom: 1px solid #333;
+}
+.hero h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+.hero p {
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+/* Main Section */
+main.tools {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  padding: 2rem;
+}
+.card {
+  background: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.card h3 {
+  margin-top: 0;
+}
+input[type="file"] {
+  margin: 0.8rem 0;
+  display: block;
+}
+button {
+  background: #007bff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover {
+  background: #0056b3;
+}
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.output-grid {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+/* Footer */
+footer.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #222;
+  color: #aaa;
+}

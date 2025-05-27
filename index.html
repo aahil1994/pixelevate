@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixelevate – AI Tools in Your Browser</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="header">
+    <h1 class="logo">🌟 Pixelevate</h1>
+    <button id="toggle-dark" title="Toggle Theme">🌙</button>
+  </header>
+
+  <section class="hero">
+    <h2>Elevate Your Pixels with AI 🧠✨</h2>
+    <p>Experience seamless background removal, cropping, and more — all offline in your browser!</p>
+  </section>
+
+  <main class="tools">
+    <section class="card">
+      <h3>🖼️ Background Remover</h3>
+      <input type="file" id="fileInput" multiple />
+      <div class="btn-group">
+        <button onclick="removeBg()">Remove Background</button>
+        <button onclick="unzipFile()">Unzip File</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>✂️ Image Crop Tool</h3>
+      <input type="file" id="cropInput" accept="image/*" />
+      <img id="cropImage" style="max-width: 100%; display: none;" />
+      <button onclick="cropImage()">Crop Image</button>
+      <canvas id="cropResult" style="display: none;"></canvas>
+    </section>
+
+    <section class="card output" id="output">
+      <h3>📤 Output:</h3>
+      <div class="output-grid">
+        <div><strong>Original</strong></div>
+        <div><strong>Transparent BG</strong></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 Pixelevate. Built with 💡 by Aahil</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
