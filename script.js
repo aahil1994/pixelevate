@@ -1,137 +1,204 @@
-// script.js
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(() => console.log('Service Worker Registered'))
-      .catch(err => console.log('Service Worker Registration Failed:', err));
-  });
-}
-
+// Wait until DOM content is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const darkToggle = document.getElementById("toggle-dark");
+  // Service Worker registration for PWA support
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch((err) => console.error("Service Worker Registration failed:", err));
+  }
 
-  // Dark mode toggle
+  // Dark mode toggle button
+  const darkToggle = document.getElementById("toggle-dark");
   darkToggle?.addEventListener("click", () => {
-    document.body.classList.toggle("light-mode");
-    if (document.body.classList.contains("light-mode")) {
-      document.body.style.backgroundColor = "#f0f0f0";
-      document.body.style.color = "#111";
-    } else {
-      document.body.style.backgroundColor = "#121212";
-      document.body.style.color = "#fff";
-    }
+    document.body.classList.toggle("dark");
   });
 
-  // GSAP animations
-  gsap.from(".hero h2", { duration: 1, y: -50, opacity: 0, ease: "power3.out" });
-  gsap.from(".hero p", { duration: 1.2, delay: 0.3, y: -30, opacity: 0, ease: "power3.out" });
+  // GSAP animations for hero and tool cards
+  gsap.from(".hero h2", {
+    duration: 1,
+    y: -50,
+    opacity: 0,
+    ease: "power3.out",
+  });
+
+  gsap.from(".hero p", {
+    duration: 1.2,
+    delay: 0.3,
+    y: -30,
+    opacity: 0,
+    ease: "power3.out",
+  });
+
   gsap.from(".tool-card", {
     scrollTrigger: ".tool-card",
     duration: 0.8,
     y: 30,
     opacity: 0,
     stagger: 0.2,
-    ease: "power2.out"
+    ease: "power2.out",
   });
-});
 
-let cropper;
+  // CropperJS setup
+  const imageInput = document.getElementById("upload-image");
+  const cropperContainer = document.getElementById("cropper-container");
+  let cropperInstance;
 
-document.getElementById('cropInput')?.addEventListener('change', function () {
-  const file = this.files[0];
-  if (file) {
-    const img = document.getElementById('cropImage');
-    img.style.display = 'block';
-    img.src = URL.createObjectURL(file);
+  imageInput?.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    img.onload = () => {
-      if (cropper) cropper.destroy();
-      cropper = new Cropper(img, {
-        aspectRatio: 1,
-        viewMode: 1
-      });
-    };
-  }
-});
+    // Clear previous cropper
+    cropperContainer.innerHTML = "";
 
-function cropImage() {
-  const canvas = document.getElementById('cropResult');
-  if (cropper) {
-    const croppedCanvas = cropper.getCroppedCanvas();
-    canvas.style.display = 'block';
-    canvas.width = croppedCanvas.width;
-    canvas.height = croppedCanvas.height;
-    canvas.getContext('2d').drawImage(croppedCanvas, 0, 0);
-  }
-}
+    const img = document.createElement("img");
+    img.id = "image-to-crop";
+    img.style.maxWidth = "100%";
+    cropperContainer.appendChild(img);
 
-function unzipFile() {
-  const input = document.getElementById('fileInput');
-  const output = document.getElementById('output');
-  const file = input.files[0];
-
-  if (file && file.name.endsWith('.zip')) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      JSZip.loadAsync(e.target.result).then(zip => {
-        output.innerHTML = '';
-        Object.keys(zip.files).forEach(filename => {
-          output.innerHTML += `<p>✅ ${filename}</p>`;
-        });
+      img.src = e.target.result;
+
+      if (cropperInstance) cropperInstance.destroy();
+
+      // Initialize CropperJS
+      cropperInstance = new Cropper(img, {
+        aspectRatio: NaN,
+        viewMode: 1,
+        background: false,
+        zoomable: true,
+        scalable: false,
+        movable: true,
+        autoCropArea: 1,
       });
     };
-    reader.readAsArrayBuffer(file);
-  } else {
-    output.innerHTML = '<p>Please upload a .zip file</p>';
+    reader.readAsDataURL(file);
+  });
+
+  // Crop image and show preview
+  const cropBtn = document.getElementById("crop-image");
+  const cropPreview = document.getElementById("crop-preview");
+
+  cropBtn?.addEventListener("click", () => {
+    if (!cropperInstance) return alert("Please upload and select an image first.");
+
+    const canvas = cropperInstance.getCroppedCanvas({
+      width: 800,
+      height: 800,
+    });
+
+    cropPreview.innerHTML = "";
+    const croppedImage = new Image();
+    croppedImage.src = canvas.toDataURL("image/png");
+    croppedImage.style.maxWidth = "100%";
+    cropPreview.appendChild(croppedImage);
+  });
+
+  // JSZip file unzipper
+  const zipInput = document.getElementById("upload-zip");
+  const unzipResult = document.getElementById("unzip-result");
+
+  zipInput?.addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    unzipResult.innerHTML = "Unzipping...";
+
+    const jszip = window.JSZip;
+    try {
+      const zip = await jszip.loadAsync(file);
+      let filesList = "<ul>";
+      for (const filename of Object.keys(zip.files)) {
+        filesList += `<li>${filename}</li>`;
+      }
+      filesList += "</ul>";
+      unzipResult.innerHTML = `Unzipped files:${filesList}`;
+    } catch (error) {
+      unzipResult.innerHTML = "Failed to unzip file.";
+      console.error(error);
+    }
+  });
+
+  // Background removal with ONNX ModNet model
+  const bgRemoveInput = document.getElementById("upload-bg-remove");
+  const bgRemoveResult = document.getElementById("bg-remove-result");
+
+  async function removeBackground(imageDataURL) {
+    bgRemoveResult.innerHTML = "Processing background removal...";
+
+    try {
+      // Load ONNX model
+      const session = await ort.InferenceSession.create(
+        "https://pixelevate.netlify.app/modnet-16.onnx"
+      );
+
+      // Prepare input tensor from image
+      const img = new Image();
+      img.src = imageDataURL;
+
+      await new Promise((res) => (img.onload = res));
+
+      // Resize and normalize image to match model input (320x320 RGB normalized)
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const size = 320;
+      canvas.width = size;
+      canvas.height = size;
+      ctx.drawImage(img, 0, 0, size, size);
+
+      const imageData = ctx.getImageData(0, 0, size, size);
+      const data = imageData.data;
+
+      // Prepare input float32 array normalized
+      const input = new Float32Array(size * size * 3);
+      for (let i = 0; i < size * size; i++) {
+        input[i * 3] = data[i * 4] / 255.0; // R
+        input[i * 3 + 1] = data[i * 4 + 1] / 255.0; // G
+        input[i * 3 + 2] = data[i * 4 + 2] / 255.0; // B
+      }
+
+      const inputTensor = new ort.Tensor("float32", input, [1, 3, size, size]);
+
+      // Run inference
+      const feeds = { input: inputTensor };
+      const results = await session.run(feeds);
+      const output = results.output.data; // Float32Array of size 320*320
+
+      // Create mask canvas
+      const maskCanvas = document.createElement("canvas");
+      maskCanvas.width = size;
+      maskCanvas.height = size;
+      const maskCtx = maskCanvas.getContext("2d");
+      const maskImageData = maskCtx.createImageData(size, size);
+
+      for (let i = 0; i < size * size; i++) {
+        const alpha = output[i] * 255;
+        maskImageData.data[i * 4] = 255;
+        maskImageData.data[i * 4 + 1] = 255;
+        maskImageData.data[i * 4 + 2] = 255;
+        maskImageData.data[i * 4 + 3] = alpha;
+      }
+
+      maskCtx.putImageData(maskImageData, 0, 0);
+
+      // Show result
+      bgRemoveResult.innerHTML = "";
+      bgRemoveResult.appendChild(maskCanvas);
+    } catch (err) {
+      bgRemoveResult.innerHTML = "Error processing background removal.";
+      console.error(err);
+    }
   }
-}
 
-async function removeBg() {
-  const file = document.getElementById('fileInput').files[0];
-  if (!file) return alert("Please select an image");
+  bgRemoveInput?.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  const img = new Image();
-  img.src = URL.createObjectURL(file);
-  await img.decode();
-
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = 512;
-  canvas.height = 512;
-  ctx.drawImage(img, 0, 0, 512, 512);
-
-  const imageData = ctx.getImageData(0, 0, 512, 512);
-  const input = new Float32Array(1 * 3 * 512 * 512);
-  for (let i = 0; i < 512 * 512; i++) {
-    input[i] = imageData.data[i * 4] / 255;
-    input[i + 512 * 512] = imageData.data[i * 4 + 1] / 255;
-    input[i + 2 * 512 * 512] = imageData.data[i * 4 + 2] / 255;
-  }
-
-  const tensor = new ort.Tensor("float32", input, [1, 3, 512, 512]);
-  const session = await ort.InferenceSession.create("models/modnet_webnn.onnx");
-  const feeds = { "input": tensor };
-  const results = await session.run(feeds);
-
-  const alpha = results.output.data;
-  const outputCanvas = document.getElementById("outputCanvas");
-  outputCanvas.width = 512;
-  outputCanvas.height = 512;
-  const outputCtx = outputCanvas.getContext("2d");
-  const outputImage = outputCtx.createImageData(512, 512);
-
-  for (let i = 0; i < 512 * 512; i++) {
-    outputImage.data[i * 4] = imageData.data[i * 4];
-    outputImage.data[i * 4 + 1] = imageData.data[i * 4 + 1];
-    outputImage.data[i * 4 + 2] = imageData.data[i * 4 + 2];
-    outputImage.data[i * 4 + 3] = Math.min(Math.max(Math.round(alpha[i] * 255), 0), 255);
-  }
-
-  document.getElementById("originalImage").src = img.src;
-  outputCtx.putImageData(outputImage, 0, 0);
-
-  const downloadLink = document.getElementById("downloadLink");
-  downloadLink.href = outputCanvas.toDataURL("image/png");
-  downloadLink.style.display = "inline-block";
-}
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      removeBackground(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+});
