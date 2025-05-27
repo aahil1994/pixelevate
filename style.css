@@ -1,103 +1,131 @@
-/* Fonts and base */
+/* style.css */
+
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #111;
-  color: #fff;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-body.dark {
-  background-color: #fff;
-  color: #111;
+  background-color: #121212;
+  color: #ffffff;
+  transition: background 0.3s, color 0.3s;
 }
 
 header.header {
+  background: #1f1f1f;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: #222;
-  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
+
 .logo {
   font-size: 1.8rem;
   font-weight: 800;
-}
-#toggle-dark {
-  font-size: 1.4rem;
-  background: #007bff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  color: white;
-  cursor: pointer;
+  margin: 0;
 }
 
-/* Hero Section */
+#toggle-dark {
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
 .hero {
   text-align: center;
-  padding: 2rem;
+  padding: 3rem 1rem;
   background: #181818;
-  border-bottom: 1px solid #333;
 }
+
 .hero h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #ffda6b;
 }
+
 .hero p {
   font-size: 1.1rem;
   color: #ccc;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-/* Main Section */
-main.tools {
+.gallery {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  grid-template-columns: 1fr 1fr;
   padding: 2rem;
 }
-.card {
+
+.tool-card {
   background: #1e1e1e;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s;
 }
-.card h3 {
-  margin-top: 0;
+
+.tool-card:hover {
+  transform: translateY(-5px);
 }
-input[type="file"] {
-  margin: 0.8rem 0;
+
+.tool-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.tool-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.tool-card input[type="file"] {
   display: block;
+  margin: 1rem auto;
 }
-button {
-  background: #007bff;
-  border: none;
+
+.tool-card button {
   padding: 0.6rem 1.2rem;
-  color: white;
+  background: #007bff;
+  color: #fff;
+  border: none;
   border-radius: 8px;
+  margin: 0.5rem;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 0.95rem;
+  transition: background 0.3s;
 }
-button:hover {
+
+.tool-card button:hover {
   background: #0056b3;
 }
-.btn-group {
-  display: flex;
-  gap: 10px;
+
+.output {
+  padding: 2rem;
+  background: #1a1a1a;
+  text-align: center;
+}
+
+.output h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .output-grid {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-/* Footer */
-footer.footer {
+.footer {
   text-align: center;
-  padding: 1rem;
-  background: #222;
+  padding: 1.5rem;
+  background: #101010;
+  font-size: 0.9rem;
   color: #aaa;
+  margin-top: 2rem;
 }
