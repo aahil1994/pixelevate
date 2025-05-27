@@ -33,6 +33,8 @@
       <h3>Background Remover</h3>
       <input type="file" id="fileInput" accept="image/*" />
       <button onclick="removeBg()">Remove Background</button>
+      <div id="bgStatus" class="status">Idle</div>
+      <div id="loader-bg" class="spinner" style="display: none;"></div>
       <img id="originalImage" alt="Original" />
       <canvas id="outputCanvas" style="display:none;"></canvas>
       <a id="downloadLink" download="output.png" style="display:none;">Download</a>
@@ -42,8 +44,10 @@
       <div class="icon">✂️</div>
       <h3>Image Crop Tool</h3>
       <input type="file" id="cropInput" accept="image/*" />
-      <img id="cropImage" style="display: none; max-width: 100%;" />
       <button onclick="cropImage()">Crop Image</button>
+      <div id="cropStatus" class="status">Idle</div>
+      <div id="loader-crop" class="spinner" style="display: none;"></div>
+      <img id="cropImage" style="display: none; max-width: 100%;" />
       <canvas id="cropResult" style="display: none;"></canvas>
     </div>
 
@@ -52,6 +56,8 @@
       <h3>ZIP Extractor</h3>
       <input type="file" id="zipInput" accept=".zip" />
       <button onclick="unzipFile()">Unzip File</button>
+      <div id="zipStatus" class="status">Idle</div>
+      <div id="loader-zip" class="spinner" style="display: none;"></div>
       <div id="output"></div>
     </div>
   </section>
